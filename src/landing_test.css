@@ -1,0 +1,59 @@
+/*help me fill up the css*/
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+ body {
+  background:#2a0f4a linear-gradient(180deg, #2a0f4a 0%, #3a165f 40%, #5a2a75 100%);
+ }
+
+ .central{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+ }
+.central-text{
+    text-align: center;
+    margin-top: 5%;
+    color: #ffffff;
+    font-size: 28px;
+    font-family: 'Quicksand', system-ui, sans-serif;
+    border:rgb(255, 245, 245) 2px solid;
+    border-radius:20px;
+    padding: 10px;
+    width: 60%;
+ 
+}
+.subcentral{
+    text-align: center;
+    margin-top:  160px;
+    color: #ffffff;
+    font-size: 18px;
+    font-family: 'Quicksand', system-ui, sans-serif;
+
+}
+/*SPACE BW TEST BUTTON AND RESULTS BUTTON*/
+.test-button{
+     border-color:rgb(255, 245, 245);
+     background-color: #3a165f;
+     padding: 10px 20px;
+     color: white;
+        margin-right: 40px;
+}
+.results-button{
+    border-color:rgb(255, 245, 245);
+     background-color: #3a165f;
+     padding: 10px 20px;
+     color: white;
+}
+.results-button:hover{
+    background-color: #5a2a75;
+    cursor: pointer;
+}
+.test-button:hover{
+    background-color: #5a2a75;
+    cursor: pointer;
+}
