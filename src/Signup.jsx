@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Signup.css';
 
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5001';
+
 export default function Signup() {
   const navigate = useNavigate();
 
@@ -9,14 +11,68 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const goHome = () => navigate('/', { replace: true });
   const goToLanding = () => navigate('/landing_test', { replace: true });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: add validation and API call later
-    goToLanding();
+    setError(null);
+
+    if (!username || !email || !password) {
+      setError('Please fill all fields');
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const base = (API_BASE || '').replace(/\/+$/, '') || 'http://localhost:5001';
+      const signupUrl = `${base}/api/auth/signup`;
+      
+      const resp = await fetch(signupUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      const data = await resp.json();
+
+      if (!resp.ok) {
+        setError(data.error || 'Signup failed');
+        setLoading(false);
+        return;
+      }
+
+      // After successful signup, automatically log them in to get a token
+      const loginUrl = `${base}/api/auth/login`;
+      const loginResp = await fetch(loginUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emailOrUsername: username, password })
+      });
+
+      const loginData = await loginResp.json();
+      
+      if (loginResp.ok && loginData.token) {
+        // Save token and user info
+        localStorage.setItem('token', loginData.token);
+        localStorage.setItem('user', JSON.stringify(loginData.user));
+      }
+
+      // Navigate to landing page
+      goToLanding();
+    } catch (err) {
+      console.error(err);
+      setError('Network or server error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,8 +118,11 @@ export default function Signup() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            <button className="auth-btn" type="submit">
-              Sign Up
+
+            {error && <div className="auth-error">{error}</div>}
+
+            <button className="auth-btn" type="submit" disabled={loading}>
+              {loading ? 'Signing up…' : 'Sign Up'}
             </button>
           </form>
         </div>

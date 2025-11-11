@@ -1,42 +1,39 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const path = require('path');
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import authRoutes from './routes/auth.js';
+import resultsRoutes from './routes/results.js';
 
 dotenv.config();
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT || 5000;
-
-// Try to connect to MongoDB if MONGO_URI provided
-const mongoUri = process.env.MONGO_URI;
-if (mongoUri) {
-  mongoose
-    .connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('MongoDB connection error:', err.message));
-} else {
-  console.warn('MONGO_URI is not set. The server will start but DB operations will fail until configured.');
-}
-
-// Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/reading', require('./routes/reading'));
-
-app.get('/', (req, res) => {
-  res.json({ message: 'PersonaPath backend API is running.' });
+// log requests
+app.use((req, res, next) => {
+  console.log(new Date().toISOString(), req.method, req.path);
+  next();
 });
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: 'Internal Server Error' });
-});
+// routes
+app.use('/api/auth', authRoutes);
+app.use('/api/results', resultsRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
-});
+app.get('/api/health', (req, res) => res.json({ ok: true }));
+
+const PORT = process.env.PORT || 5001;
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/persona';
+
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log('✅ MongoDB connected');
+    app.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error('❌ MongoDB connection error:', err);
+    process.exit(1);
+  });

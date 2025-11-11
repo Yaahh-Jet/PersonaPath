@@ -1,18 +1,12 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const ReadingSchema = new mongoose.Schema({
-  summary: { type: String },
-  score: { type: Number },
-  createdAt: { type: Date, default: Date.now }
-});
+const userSchema = new mongoose.Schema(
+  {
+    username: { type: String, required: true, unique: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    password: { type: String, required: true }
+  },
+  { timestamps: true }
+);
 
-const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: false },
-  passwordHash: { type: String, required: true },
-  profile: { type: mongoose.Schema.Types.Mixed },
-  readingResults: [ReadingSchema],
-  createdAt: { type: Date, default: Date.now }
-});
-
-module.exports = mongoose.model('User', UserSchema);
+export default mongoose.models.User || mongoose.model('User', userSchema);

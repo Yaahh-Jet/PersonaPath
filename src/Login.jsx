@@ -1,42 +1,56 @@
 import React, { useState } from 'react';
-import './login.css';
 import { useNavigate } from 'react-router-dom';
+import './Login.css?v=2'; // Added ?v=2 to force reload
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000';
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5001';
 
 export default function Login() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [emailOrUsername, setEmailOrUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const goHome = () => navigate('/', { replace: true });
+  const goToLanding = () => navigate('/landing_test', { replace: true });
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError(null);
+
+    if (!emailOrUsername || !password) {
+      setError('Please fill in both fields');
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/api/auth/login`, {
+      const base = (API_BASE || '').replace(/\/+$/, '') || 'http://localhost:5001';
+      const url = `${base}/api/auth/login`;
+      console.log('Login POST ->', url);
+
+      const resp = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ emailOrUsername, password })
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || 'Login failed');
-        setLoading(false);
-        return;
+      console.log('Response status:', resp.status, resp.statusText);
+      const contentType = resp.headers.get('content-type') || '';
+      const body = contentType.includes('application/json') ? await resp.json() : await resp.text();
+
+      if (!resp.ok) {
+        const msg = typeof body === 'string' ? body : (body.error || JSON.stringify(body));
+        throw new Error(msg || `Request failed: ${resp.status}`);
       }
 
-      // store token and navigate home
-      if (data.token) localStorage.setItem('persona_token', data.token);
-      navigate('/', { replace: true });
+      // success: store token/user and navigate to landing page
+      if (body.token) localStorage.setItem('token', body.token);
+      if (body.user) localStorage.setItem('user', JSON.stringify(body.user));
+      goToLanding();
     } catch (err) {
-      setError('Network error');
-      console.error(err);
+      console.error('Login error:', err);
+      setError(String(err.message || err));
     } finally {
       setLoading(false);
     }
@@ -46,26 +60,21 @@ export default function Login() {
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-left">
-          {/* Back button (top-left) */}
-          <button
-            type="button"
-            className="back-btn"
-            onClick={goHome}
-          >
+          <button type="button" className="back-btn" onClick={goHome}>
             ← Back
           </button>
 
           <h1>LOGIN</h1>
           <hr className="divider" />
+
           <form className="auth-form" onSubmit={handleSubmit}>
             <input
               className="auth-input"
-              name="username"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              name="emailOrUsername"
+              placeholder="Username or Email"
+              value={emailOrUsername}
+              onChange={(e) => setEmailOrUsername(e.target.value)}
             />
-
             <input
               className="auth-input"
               name="password"
@@ -75,10 +84,10 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {error && <div style={{ color: 'crimson', marginBottom: 8 }}>{error}</div>}
+            {error && <div className="auth-error" style={{ color: '#ffb3b3', marginBottom: 8 }}>{error}</div>}
 
             <button className="auth-btn" type="submit" disabled={loading}>
-              {loading ? 'Logging in…' : 'Login'}
+              {loading ? 'Signing in…' : 'Login'}
             </button>
           </form>
         </div>
@@ -86,7 +95,7 @@ export default function Login() {
         <div className="auth-right">
           <img
             className="auth-illustration"
-            src="src\assets\4995233-removebg-preview.png"
+            src="https://via.placeholder.com/420x300?text=Illustration"
             alt="illustration placeholder"
           />
         </div>
