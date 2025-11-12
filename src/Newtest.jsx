@@ -6,7 +6,10 @@ export default function Newtest() {
   const navigate = useNavigate();
 
   const handleBeginTest = () => {
-    navigate('/mbti-test');
+    localStorage.removeItem('mbtiResult');
+    localStorage.removeItem('horoscope');
+    localStorage.removeItem('palmResult');
+    navigate('/test');  // Changed from '/mbti-test' to '/test'
   };
 
   const handleGoBack = () => {
@@ -16,7 +19,7 @@ export default function Newtest() {
   return (
     <div className="newtest-root">
       <header className="newtest-header">
-        <div className="newtest-logo">LOGO</div>
+        <div className="newtest-logo">PersonaPath</div>
         <button className="back-link" onClick={handleGoBack}>
           ← Back to Dashboard
         </button>

@@ -18,7 +18,7 @@ export default function Nav() {
   return (
     <header className="site-header" role="banner">
       <div className="site-header__inner">
-        <div className="logo" aria-label="Homepage">LOGO</div>
+        <div className="logo" aria-label="Homepage">PersonaPath</div>
 
         <nav className="site-nav" aria-label="Main navigation">
           <button

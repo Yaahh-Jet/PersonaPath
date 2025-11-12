@@ -51,7 +51,7 @@ export default function MbtiResults() {
   return (
     <div className="mbti-results-root">
       <header className="results-header">
-        <div className="results-logo">LOGO</div>
+        <div className="results-logo">PersonaPath</div>
         <button className="home-link" onClick={() => navigate('/landing_test')}>
           Back to Dashboard
         </button>

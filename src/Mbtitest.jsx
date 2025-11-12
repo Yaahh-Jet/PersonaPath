@@ -1,197 +1,139 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchMBTIQuestions, calculateMBTI } from './services/mbtiService.js';
 import './Mbtitest.css';
+
+const OPTIONS = [
+  { value: 1, label: 'Strongly Disagree' },
+  { value: 2, label: 'Disagree' },
+  { value: 3, label: 'Neutral' },
+  { value: 4, label: 'Agree' },
+  { value: 5, label: 'Strongly Agree' }
+];
+
+const MBTI_QUESTIONS = [
+  "You enjoy vibrant social events with lots of people.",
+  "You often spend time exploring unrealistic yet intriguing ideas.",
+  "Your travel plans are usually well thought out.",
+  "It is often difficult for you to relate to other people’s feelings.",
+  "Your mood can change very quickly.",
+  "You rarely worry about how your actions affect other people.",
+  "You often contemplate the reasons for human existence.",
+  "Logic is usually more important than heart when making important decisions.",
+  "Your home and work environments are quite tidy.",
+  "You do not mind being at the center of attention.",
+  "Keeping your options open is more important than having a to-do list.",
+  "You often think about what you should have said in a conversation long after it has taken place.",
+  "If your friend is sad about something, you are more likely to offer emotional support than suggest ways to deal with the problem.",
+  "People can rarely upset you.",
+  "You often rely on other people to be the ones to start a conversation and keep it going.",
+  "You rarely second-guess the choices that you have made.",
+  "You become bored or lose interest when the discussion gets highly theoretical.",
+  "You find it easy to empathize with a person whose experiences are very different from yours.",
+  "You usually postpone finalizing decisions for as long as possible.",
+  "You rarely feel insecure.",
+  "You prefer to be alone rather than with a group of people.",
+  "You often feel overwhelmed.",
+  "You complete tasks efficiently without procrastinating.",
+  "You enjoy participating in group activities.",
+  "You like books and movies that make you come up with your own interpretation of the ending.",
+  "Your happiness comes more from helping others accomplish things than your own accomplishments.",
+  "You are interested in so many things that you find it difficult to choose what to try next.",
+  "You are prone to worrying that things will take a turn for the worse.",
+  "You avoid leadership roles in group settings.",
+  "You are definitely not an artistic type of person.",
+  "You think the world would be a better place if people relied more on rationality and less on their feelings.",
+  "You prefer to do your chores before allowing yourself to relax.",
+  "You enjoy watching people argue.",
+  "You tend to avoid drawing attention to yourself.",
+  "Your mood often fluctuates.",
+  "You lose patience with people who are not as efficient as you.",
+  "You often end up doing things at the last possible moment.",
+  "You have always been fascinated by the question of what happens after death.",
+  "You usually prefer to be around others rather than on your own.",
+  "You become bored with routine.",
+  "You are more of a detail-oriented than a big picture person.",
+  "You are very affectionate with people you care about.",
+  "You have a careful and methodical approach to life.",
+  "You are prone to experiencing anxiety.",
+  "You often feel as if you have to justify yourself to other people.",
+  "Your personal work style is closer to spontaneous bursts of energy than organized and consistent efforts.",
+  "You find it difficult to introduce yourself to other people.",
+  "You often get so lost in thoughts that you ignore or forget your surroundings.",
+  "You are usually highly motivated and energetic.",
+  "Winning a debate matters less to you than making sure no one gets upset.",
+  "You rarely get carried away by fantasies and ideas.",
+  "You find yourself drawn to places with busy, bustling atmospheres.",
+  "You are more likely to trust your experience than your imagination.",
+  "You worry too much about what other people think.",
+  "If the room is full, you stay closer to the walls, avoiding the center.",
+  "You have a tendency to procrastinate.",
+  "You feel more comfortable following a schedule than being spontaneous.",
+  "You enjoy being spontaneous and flexible.",
+  "You value tradition and established methods.",
+  "You are comfortable making decisions quickly.",
+  "You prefer to have detailed plans before starting a project."
+];
 
 export default function Mbtitest() {
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [responses, setResponses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [current, setCurrent] = useState(0);
+  const [answers, setAnswers] = useState([]);
 
   useEffect(() => {
-    loadQuestions();
+    // Instantly load hardcoded questions
+    setQuestions(MBTI_QUESTIONS.map((text, idx) => ({ id: idx + 1, text })));
+    setAnswers(Array(MBTI_QUESTIONS.length).fill(null));
   }, []);
 
-  async function loadQuestions() {
-    try {
-      const data = await fetchMBTIQuestions();
-      setQuestions(data);
-      setLoading(false);
-    } catch (err) {
-      console.error('Failed to load questions:', err);
-      setError('Failed to load test questions');
-      setLoading(false);
-    }
-  }
+  function handleSelect(optionValue) {
+    const updated = [...answers];
+    updated[current] = optionValue;
+    setAnswers(updated);
 
-  const currentQuestion = questions[currentQuestionIndex];
-  const totalQuestions = questions.length;
-
-  const handleAnswer = (answerValue) => {
-    // answerValue: -2 (strongly disagree) to +2 (strongly agree)
-    const newResponse = {
-      questionId: currentQuestion.id,
-      dimension: currentQuestion.dimension,
-      direction: currentQuestion.direction,
-      answer: answerValue
-    };
-
-    const updatedResponses = [...responses];
-    const existingIndex = responses.findIndex(r => r.questionId === currentQuestion.id);
-    
-    if (existingIndex >= 0) {
-      updatedResponses[existingIndex] = newResponse;
+    if (current < questions.length - 1) {
+      setTimeout(() => setCurrent(current + 1), 180);
     } else {
-      updatedResponses.push(newResponse);
+      localStorage.setItem('mbtiAnswers', JSON.stringify(updated));
+      navigate('/horoscope');
     }
-
-    setResponses(updatedResponses);
-
-    // Auto-advance to next question
-    if (currentQuestionIndex < totalQuestions - 1) {
-      setTimeout(() => {
-        setCurrentQuestionIndex(currentQuestionIndex + 1);
-      }, 300);
-    } else {
-      // Test complete
-      handleFinish(updatedResponses);
-    }
-  };
-
-  const handleFinish = (finalResponses) => {
-    const result = calculateMBTI(finalResponses);
-    console.log('MBTI Result:', result);
-    
-    // Store result in localStorage
-    localStorage.setItem('mbtiResult', JSON.stringify(result));
-    
-    // Navigate to results page
-    navigate('/mbti-results');
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentQuestionIndex < totalQuestions - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
-  };
-
-  const handleExit = () => {
-    if (window.confirm('Are you sure you want to exit? Your progress will be lost.')) {
-      navigate('/landing_test');
-    }
-  };
-
-  // Get current response if exists
-  const currentResponse = responses.find(r => r.questionId === currentQuestion?.id);
-  const selectedAnswer = currentResponse?.answer;
-
-  if (loading) {
-    return (
-      <div className="mbtitest-root">
-        <div className="loading-screen">
-          <div className="spinner"></div>
-          <p>Loading test questions...</p>
-        </div>
-      </div>
-    );
   }
 
-  if (error) {
-    return (
-      <div className="mbtitest-root">
-        <div className="error-screen">
-          <p>{error}</p>
-          <button onClick={() => navigate('/landing_test')}>Back to Dashboard</button>
-        </div>
-      </div>
-    );
+  function handleBack() {
+    if (current > 0) setCurrent(current - 1);
   }
+
+  if (!questions.length) {
+    return <div className="mbtitest-root"><div className="loading-screen">Loading...</div></div>;
+  }
+
+  const q = questions[current];
 
   return (
     <div className="mbtitest-root">
-      <header className="mbtitest-header">
-        <div className="mbtitest-logo">LOGO</div>
-        <div className="progress-info">
-          Question {currentQuestionIndex + 1} of {totalQuestions}
-        </div>
-        <button className="exit-btn" onClick={handleExit}>
-          Exit Test
-        </button>
-      </header>
-
-      <main className="mbtitest-content">
-        <div className="progress-bar">
-          <div 
-            className="progress-fill" 
-            style={{ width: `${((currentQuestionIndex + 1) / totalQuestions) * 100}%` }}
-          />
-        </div>
-
-        <div className="question-card">
-          <h2 className="question-text">
-            {currentQuestion?.text}
-          </h2>
-
-          <div className="answer-options">
-            <button 
-              className={`answer-btn ${selectedAnswer === -2 ? 'selected' : ''}`}
-              onClick={() => handleAnswer(-2)}
-            >
-              <span className="answer-label">Strongly Disagree</span>
-            </button>
-            <button 
-              className={`answer-btn ${selectedAnswer === -1 ? 'selected' : ''}`}
-              onClick={() => handleAnswer(-1)}
-            >
-              <span className="answer-label">Disagree</span>
-            </button>
-            <button 
-              className={`answer-btn ${selectedAnswer === 0 ? 'selected' : ''}`}
-              onClick={() => handleAnswer(0)}
-            >
-              <span className="answer-label">Neutral</span>
-            </button>
-            <button 
-              className={`answer-btn ${selectedAnswer === 1 ? 'selected' : ''}`}
-              onClick={() => handleAnswer(1)}
-            >
-              <span className="answer-label">Agree</span>
-            </button>
-            <button 
-              className={`answer-btn ${selectedAnswer === 2 ? 'selected' : ''}`}
-              onClick={() => handleAnswer(2)}
-            >
-              <span className="answer-label">Strongly Agree</span>
-            </button>
+      <div className="mbti-card">
+        <div className="mbti-progress">
+          Question {current + 1} / {questions.length}
+          <div className="bar">
+            <div className="fill" style={{ width: `${((current + 1) / questions.length) * 100}%` }}></div>
           </div>
         </div>
-
-        <div className="navigation-buttons">
-          <button 
-            className="nav-btn" 
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
-          >
-            Previous
-          </button>
-          <button 
-            className="nav-btn nav-btn--primary"
-            onClick={handleNext}
-            disabled={currentQuestionIndex === totalQuestions - 1 || !selectedAnswer}
-          >
-            {currentQuestionIndex === totalQuestions - 1 ? 'Finish' : 'Next'}
-          </button>
+        <h2 className="question-text">{q.text}</h2>
+        <div className="options-row">
+          {OPTIONS.map(opt => (
+            <button
+              key={opt.value}
+              className={`option-btn${answers[current] === opt.value ? ' selected' : ''}`}
+              onClick={() => handleSelect(opt.value)}
+            >
+              {opt.label}
+            </button>
+          ))}
         </div>
-      </main>
+        <div style={{marginTop:24,display:'flex',justifyContent:'space-between'}}>
+          <button className="option-btn" onClick={handleBack} disabled={current === 0}>← Back</button>
+        </div>
+      </div>
     </div>
   );
 }

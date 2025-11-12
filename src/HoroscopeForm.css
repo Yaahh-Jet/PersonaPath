@@ -1,0 +1,71 @@
+.horoscope-form-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg,#2a0f5a,#3a1f6f);
+  font-family: 'Quicksand', sans-serif;
+  color:#fff;
+}
+.horoscope-form {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.horoscope-form h1 {
+  margin:0 0 8px;
+  font-size:26px;
+  text-align:center;
+}
+.horoscope-form label {
+  display:flex;
+  flex-direction:column;
+  font-size:14px;
+  gap:6px;
+}
+.horoscope-form input {
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.25);
+  background:rgba(255,255,255,0.1);
+  color:#fff;
+  font-size:14px;
+}
+.horoscope-form input:focus {
+  outline:2px solid #8b6fd9;
+}
+.form-error {
+  background:rgba(255,100,100,0.2);
+  border:1px solid rgba(255,100,100,0.4);
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:13px;
+  text-align:center;
+  color:#ffb3b3;
+}
+.form-actions {
+  display:flex;
+  justify-content:center;
+  margin-top:4px;
+}
+.form-actions button {
+  background:#8b6fd9;
+  color:#1f0f3a;
+  border:none;
+  padding:14px 28px;
+  font-weight:700;
+  border-radius:14px;
+  cursor:pointer;
+  font-size:15px;
+  transition:0.18s;
+}
+.form-actions button:hover {
+  background:#9d7ee6;
+  transform:translateY(-2px);
+}

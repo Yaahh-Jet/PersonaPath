@@ -5,8 +5,14 @@ import './landing_test.css';
 export default function LandingTest() {
   const navigate = useNavigate();
 
-  const handleStartTest = () => navigate('/test');
-  const handleViewResults = () => navigate('/results');
+  function startNewTest() {
+    navigate('/newtest'); // Goes to test selection/prep
+  }
+
+  function viewOldResults() {
+    navigate('/oldresults'); // Goes to past results
+  }
+
   const handleSignOut = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -16,7 +22,7 @@ export default function LandingTest() {
   return (
     <div className="landing-root">
       <header className="landing-header">
-        <div className="landing-logo">LOGO</div>
+        <div className="landing-logo">PersonaPath</div>
         <button className="signout-link" onClick={handleSignOut}>Sign Out</button>
       </header>
 
@@ -28,7 +34,7 @@ export default function LandingTest() {
         </h1>
 
         <div className="landing-cards">
-          <button className="card card--muted" onClick={handleViewResults}>
+          <button className="card card--muted" onClick={viewOldResults}>
             <div className="card-icon">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <rect x="4" y="11" width="4" height="9" rx="1.5" fill="currentColor"/>
@@ -41,7 +47,7 @@ export default function LandingTest() {
             </div>
           </button>
 
-          <button className="card card--accent" onClick={handleStartTest}>
+          <button className="card card--accent" onClick={startNewTest}>
             <div className="card-icon">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" fill="none"/>

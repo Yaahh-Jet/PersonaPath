@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Oldresults.css';
 
@@ -11,84 +11,75 @@ export default function Oldresults() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setError('You need to login to view results');
+      setLoading(false);
+      return;
+    }
     fetchResults();
   }, []);
 
   async function fetchResults() {
+    setLoading(true);
+    setError('');
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        console.log('No token found, redirecting to login');
-        navigate('/login', { replace: true });
+        setError('Please login to view saved results');
+        setLoading(false);
         return;
       }
 
-      const base = (API_BASE || '').replace(/\/+$/, '') || 'http://localhost:5001';
-      const url = `${base}/api/results`;
-
-      console.log('Fetching results from:', url);
-      console.log('Using token:', token.substring(0, 20) + '...');
-
-      const resp = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      const res = await fetch(`${API_BASE}/api/results`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
 
-      console.log('Response status:', resp.status);
-
-      if (resp.status === 401) {
-        console.log('Unauthorized, clearing token and redirecting');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        navigate('/login', { replace: true });
+      if (res.status === 401) {
+        setError('Session expired. Please login again.');
+        setLoading(false);
         return;
       }
 
-      const data = await resp.json();
-      console.log('Received data:', data);
-
-      if (!resp.ok) {
-        throw new Error(data.error || 'Failed to fetch results');
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || 'Failed to fetch results');
       }
 
+      const data = await res.json();
       setResults(data.results || []);
-    } catch (err) {
-      console.error('Fetch results error:', err);
-      setError(err.message || 'Failed to load results');
-      // Don't redirect on network error - show error message instead
+    } catch (e) {
+      console.error('Fetch error:', e);
+      setError(e.message || 'Failed to load results');
     } finally {
       setLoading(false);
     }
   }
 
-  function handleSignOut() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/', { replace: true });
-  }
+  function handleBack() { navigate('/landing_test'); }
+  function handleSignOut() { localStorage.clear(); navigate('/', { replace: true }); }
+  function handleLogin() { navigate('/login'); }
 
-  function formatDate(timestamp) {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
+  function formatDate(ts) {
+    // Handle MongoDB $date format or ISO string
+    const dateValue = ts?.$date || ts;
+    const d = dateValue ? new Date(dateValue) : null;
+    return d && !isNaN(d) ? d.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
       day: 'numeric',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    });
+      hour: '2-digit',
+      minute: '2-digit'
+    }) : 'Unknown date';
   }
 
   if (loading) {
     return (
       <div className="results-root">
-        <header className="results-header">
-          <div className="results-logo">LOGO</div>
-          <button className="signout-link" onClick={handleSignOut}>Sign Out</button>
-        </header>
-        <div className="loading">Loading your results...</div>
+        <div className="loading-container">
+          <div className="spinner"></div>
+          <p>Loading your results...</p>
+        </div>
       </div>
     );
   }
@@ -96,66 +87,105 @@ export default function Oldresults() {
   return (
     <div className="results-root">
       <header className="results-header">
-        <div className="results-logo">LOGO</div>
-        <button className="signout-link" onClick={handleSignOut}>Sign Out</button>
+        <div className="results-logo">PersonaPath</div>
+        <div className="header-actions">
+          <button className="back-btn" onClick={handleBack}>← Back to Dashboard</button>
+          <button className="signout-btn" onClick={handleSignOut}>Sign Out</button>
+        </div>
       </header>
 
       <main className="results-content">
-        <h1 className="results-title">Past Tests</h1>
-        <p className="results-subtitle">Review your previous personality and astrology test results</p>
+        <h1 className="results-title">Your Test History</h1>
 
         {error && (
           <div className="error-message">
-            {error}
-            <button 
-              className="btn-primary" 
-              onClick={() => {setError(null); fetchResults();}}
-              style={{marginTop: '12px'}}
-            >
-              Try Again
-            </button>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+              <path d="M12 8v4M12 16h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            <span>{error}</span>
+            {String(error).toLowerCase().includes('login') && (
+              <button className="btn-primary" onClick={handleLogin}>Go to Login</button>
+            )}
           </div>
         )}
 
         {!error && results.length === 0 ? (
           <div className="no-results">
-            <p>You haven't taken any tests yet</p>
-            <button className="btn-primary" onClick={() => navigate('/test')}>
-              Take Your First Test
-            </button>
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" opacity="0.3"/>
+              <path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+            <p>No results yet. Take your first personality test!</p>
+            <button className="btn-primary" onClick={() => navigate('/test')}>Take Test Now</button>
           </div>
         ) : !error && (
-          <div className="results-list">
-            {results.map((result) => (
-              <div key={result._id} className="result-card">
-                <div className="result-card-left">
-                  <div className="result-mbti">{result.mbti}</div>
-                  <div className="result-horoscope">{result.horoscope}</div>
+          <div className="results-grid">
+            {results.map((r, i) => (
+              <div key={r._id || r._id?.$oid || i} className="result-card">
+                <div className="card-header">
+                  <span className="test-date">{formatDate(r.timestamp)}</span>
+                  <span className="mbti-badge">{r.mbti || 'Unknown'}</span>
                 </div>
-
-                <div className="result-card-center">
-                  <div className="result-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-                      <path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
-                  </div>
-                  <div className="result-palm">
-                    <div className="palm-type">{result.palmResult?.lineType || 'Palm Reading'}</div>
-                    <div className="palm-prediction">{result.palmResult?.prediction || 'No prediction available'}</div>
-                  </div>
-                </div>
-
-                <div className="result-card-right">
-                  <div className="result-date">{formatDate(result.timestamp)}</div>
+                <div className="card-content">
+                  {r.horoscope && r.horoscope !== 'Not available' && (
+                    <div className="info-row">
+                      <span className="label">Horoscope:</span>
+                      <span className="value">{r.horoscope}</span>
+                    </div>
+                  )}
+                  {r.palmResult?.lineType && (
+                    <div className="info-row">
+                      <span className="label">Palm Reading:</span>
+                      <span className="value">{r.palmResult.lineType}</span>
+                    </div>
+                  )}
+                  {r.palmResult?.prediction && (
+                    <div className="info-row">
+                      <span className="label">Prediction:</span>
+                      <span className="value">{r.palmResult.prediction}</span>
+                    </div>
+                  )}
+                  {r.scores && (
+                    <div className="scores-section">
+                      <div className="label">Personality Scores:</div>
+                      {Object.entries(r.scores).map(([trait, score]) => (
+                        <div key={trait} className="score-row">
+                          <span className="score-label">{trait}</span>
+                          <div className="score-bar">
+                            <div className="score-fill" style={{ width: `${score}%` }}></div>
+                            <span className="score-text">{score}%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {Array.isArray(r.dominantTraits) && r.dominantTraits.length > 0 && (
+                    <div className="traits-section">
+                      <div className="label">Dominant Traits:</div>
+                      <div className="trait-tags">
+                        {r.dominantTraits.map((t, idx) => <span key={idx} className="trait-tag">{t}</span>)}
+                      </div>
+                    </div>
+                  )}
+                  {r.analysisText && (
+                    <div className="analysis-section">
+                      <div className="label">Analysis:</div>
+                      <p className="analysis-text">{r.analysisText}</p>
+                    </div>
+                  )}
+                  {r.testType && (
+                    <div className="meta-info">
+                      <span>Test: {r.testType}</span>
+                      {r.duration ? <span> • Duration: {Math.floor(r.duration/60)}m {r.duration%60}s</span> : null}
+                      {r.accuracyConfidence ? <span> • Confidence: {(r.accuracyConfidence*100).toFixed(0)}%</span> : null}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
-
-        <button className="btn-back" onClick={() => navigate('/landing_test')}>
-          Back to Dashboard
-        </button>
       </main>
     </div>
   );
