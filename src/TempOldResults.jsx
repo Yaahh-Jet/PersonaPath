@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Oldresults.css';
+import './TempOldResults.css';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5001';
 
@@ -89,12 +89,14 @@ export default function Oldresults() {
       <header className="results-header">
         <div className="results-logo">PersonaPath</div>
         <div className="header-actions">
-          <button className="back-btn" onClick={handleBack}>← Back to Dashboard</button>
           <button className="signout-btn" onClick={handleSignOut}>Sign Out</button>
         </div>
       </header>
+      <div className="back-navigation">
+        <button className="back-btn" onClick={handleBack}>← Back to Dashboard</button>
+      </div>
 
-      <main className="results-content">
+      <div className="results-content">
         <h1 className="results-title">Your Test History</h1>
 
         {error && (
@@ -186,7 +188,7 @@ export default function Oldresults() {
             ))}
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }

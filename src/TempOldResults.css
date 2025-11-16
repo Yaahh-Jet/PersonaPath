@@ -1,6 +1,12 @@
-:root { --max-w: 1120px; }
+/* Updated v2 */
+:root { 
+  --max-w: 1120px; 
+}
 
-html, body, #root { height: 100%; margin: 0; }
+html, body, #root { 
+  height: 100%; 
+  margin: 0; 
+}
 
 .results-root {
   min-height: 100vh;
@@ -9,11 +15,11 @@ html, body, #root { height: 100%; margin: 0; }
   font-family: 'Quicksand', system-ui, sans-serif;
 }
 
-/* Header */
+/* ---------------- HEADER ---------------- */
 .results-header {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 24px 32px;
+  padding: 20px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -24,44 +30,65 @@ html, body, #root { height: 100%; margin: 0; }
   font-weight: 700;
   font-size: 22px;
   letter-spacing: 3px;
+  color: #fff;
 }
 
 .header-actions {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 14px;
 }
 
-.back-btn, .signout-btn {
+.signout-btn {
   background: transparent;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 8px 14px;
+  color: #ffb3b3;
+  border: 1px solid rgba(255, 100, 100, 0.35);
+  padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 700;
   font-family: 'Quicksand', sans-serif;
-  transition: background 0.2s;
-}
-
-.back-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.signout-btn {
-  color: #ffb3b3;
-  border-color: rgba(255, 100, 100, 0.35);
+  transition: background 0.2s, transform 0.1s;
+  white-space: nowrap;
 }
 
 .signout-btn:hover {
   background: rgba(255, 100, 100, 0.1);
+  transform: translateY(-1px);
 }
 
-/* Content */
+/* ---------------- BACK NAVIGATION ---------------- */
+.back-navigation {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 16px 32px 0;
+}
+
+.back-btn {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Quicksand', sans-serif;
+  transition: background 0.2s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+/* ---------------- CONTENT ---------------- */
 .results-content {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 36px 32px 72px;
+  padding: 24px 32px 72px;
 }
 
 .results-title {
@@ -71,7 +98,7 @@ html, body, #root { height: 100%; margin: 0; }
   font-weight: 700;
 }
 
-/* Loading */
+/* ---------------- LOADING ---------------- */
 .loading-container {
   min-height: 60vh;
   display: flex;
@@ -94,7 +121,7 @@ html, body, #root { height: 100%; margin: 0; }
   to { transform: rotate(360deg); }
 }
 
-/* Error */
+/* ---------------- ERROR ---------------- */
 .error-message {
   background: rgba(255, 100, 100, 0.14);
   border: 1px solid rgba(255, 100, 100, 0.3);
@@ -129,7 +156,7 @@ html, body, #root { height: 100%; margin: 0; }
   background: #9d7ee6;
 }
 
-/* No results */
+/* ---------------- NO RESULTS ---------------- */
 .no-results {
   text-align: center;
   padding: 60px 20px;
@@ -140,7 +167,7 @@ html, body, #root { height: 100%; margin: 0; }
   margin-bottom: 20px;
 }
 
-/* Grid */
+/* ---------------- GRID ---------------- */
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -207,6 +234,7 @@ html, body, #root { height: 100%; margin: 0; }
   text-align: right;
 }
 
+/* ---------------- SCORES ---------------- */
 .scores-section {
   padding: 12px;
   background: rgba(255, 255, 255, 0.06);
@@ -253,6 +281,7 @@ html, body, #root { height: 100%; margin: 0; }
   font-weight: 700;
 }
 
+/* ---------------- TRAITS ---------------- */
 .traits-section {
   padding: 10px 0;
 }
@@ -278,6 +307,7 @@ html, body, #root { height: 100%; margin: 0; }
   font-weight: 700;
 }
 
+/* ---------------- ANALYSIS ---------------- */
 .analysis-section {
   margin-top: 4px;
   padding-top: 12px;
@@ -296,6 +326,7 @@ html, body, #root { height: 100%; margin: 0; }
   font-size: 14px;
 }
 
+/* ---------------- META INFO ---------------- */
 .meta-info {
   margin-top: 6px;
   padding-top: 10px;
@@ -307,21 +338,18 @@ html, body, #root { height: 100%; margin: 0; }
   flex-wrap: wrap;
 }
 
-/* Responsive */
+/* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
   .results-header {
-    flex-direction: column;
-    gap: 12px;
     padding: 18px 20px;
   }
 
-  .header-actions {
-    width: 100%;
-    justify-content: space-between;
+  .back-navigation {
+    padding: 12px 20px 0;
   }
 
   .results-content {
-    padding: 24px 20px 56px;
+    padding: 20px 20px 56px;
   }
 
   .results-title {

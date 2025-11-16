@@ -40,7 +40,7 @@ html, body, #root {
   padding: 0 48px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start; /* Changed from center to flex-start */
   position: relative;
   z-index: 1;
 }
@@ -49,6 +49,7 @@ html, body, #root {
   font-weight: 600;
   font-size: 24px;
   letter-spacing: 3px;
+  padding-top: 0; /* Keep logo at top */
 }
 
 .back-link {
@@ -58,6 +59,7 @@ html, body, #root {
   cursor: pointer;
   font-size: 15px;
   padding: 8px 12px;
+  margin-top: 40px; /* Add margin to push button down */
   transition: opacity 160ms ease;
 }
 

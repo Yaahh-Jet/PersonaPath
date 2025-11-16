@@ -130,7 +130,7 @@ export default function Signup() {
         <div className="auth-right">
           <img
             className="auth-illustration"
-            src="https://via.placeholder.com/420x300?text=Illustration"
+            src="src\20943394.jpg"
             alt="illustration placeholder"
           />
         </div>

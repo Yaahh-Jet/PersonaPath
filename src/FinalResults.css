@@ -11,7 +11,7 @@
 }
 
 .final-results-container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -335,7 +335,7 @@
 /* Hero Header */
 .results-hero {
   text-align: center;
-  padding: 40px 20px 60px;
+  padding: 40px 20px 32px;
   position: relative;
 }
 
@@ -351,6 +351,7 @@
   cursor: pointer;
   font-weight: 600;
   transition: all 0.2s;
+  font-size: 14px;
 }
 
 .back-link:hover {
@@ -378,236 +379,314 @@
   font-weight: 700;
 }
 
-/* MBTI Section */
-.mbti-section {
-  margin-bottom: 48px;
+/* HERO INTEGRATED ANALYSIS - The Star of the Show */
+.hero-analysis {
+  background: linear-gradient(135deg, rgba(139,111,217,0.25), rgba(217,111,217,0.15));
+  border: 2px solid rgba(139,111,217,0.5);
+  border-radius: 32px;
+  padding: 64px 48px;
+  margin-bottom: 64px;
+  box-shadow: 0 16px 48px rgba(139,111,217,0.3);
 }
 
-.mbti-type-card {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 24px;
-  padding: 48px 40px;
-  text-align: center;
-}
-
-.mbti-type-card h2 {
-  font-size: 24px;
-  margin: 0 0 24px;
-  opacity: 0.9;
-}
-
-.type-display {
-  font-size: 96px;
+.hero-type-display {
+  font-size: 120px;
   font-weight: 900;
-  letter-spacing: 12px;
-  background: linear-gradient(135deg, #8b6fd9, #b89ef5, #d4a4ff);
+  letter-spacing: 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #fff 0%, #b89ef5 50%, #d4a4ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 48px;
-  text-shadow: 0 8px 32px rgba(139,111,217,0.4);
+  margin-bottom: 24px;
+  text-shadow: 0 8px 32px rgba(139,111,217,0.5);
+  line-height: 1;
 }
 
-.type-breakdown {
+.hero-subtitle {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 48px;
+  color: rgba(255,255,255,0.95);
+}
+
+.analysis-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-top: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
 }
 
-.letter-card {
-  background: rgba(139,111,217,0.15);
-  border: 1px solid rgba(139,111,217,0.3);
-  border-radius: 16px;
-  padding: 24px 20px;
+.analysis-card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 32px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.analysis-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+
+.analysis-card.strengths {
+  border: 2px solid rgba(100,255,100,0.3);
+}
+
+.analysis-card.challenges {
+  border: 2px solid rgba(255,200,100,0.3);
+}
+
+.analysis-card.growth {
+  border: 2px solid rgba(100,200,255,0.3);
+}
+
+.card-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.analysis-card h3 {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 16px;
+  text-align: center;
+  color: #fff;
+}
+
+.analysis-card p {
+  font-size: 16px;
+  line-height: 1.8;
+  margin: 0;
+  color: rgba(255,255,255,0.9);
+}
+
+/* Cosmic Blend */
+.cosmic-blend {
+  background: rgba(217,175,111,0.15);
+  border: 2px solid rgba(217,175,111,0.4);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+}
+
+.cosmic-blend h3 {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 20px;
+  color: #d9af6f;
+}
+
+.blend-text {
+  font-size: 18px;
+  line-height: 1.9;
+  margin: 0;
+  color: rgba(255,255,255,0.95);
+}
+
+.blend-text strong {
+  color: #d9af6f;
+  font-weight: 800;
+}
+
+/* MBTI Deep Dive */
+.mbti-deep-dive {
+  margin-bottom: 64px;
+}
+
+.section-title {
+  font-size: 36px;
+  font-weight: 800;
+  text-align: center;
+  margin: 0 0 16px;
+  color: #fff;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 16px;
+  color: rgba(255,255,255,0.8);
+  margin: 0 0 40px;
+}
+
+.letters-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.letter-detail-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 32px;
   transition: transform 0.3s, border-color 0.3s;
 }
 
-.letter-card:hover {
+.letter-detail-card:hover {
   transform: translateY(-4px);
   border-color: rgba(139,111,217,0.6);
 }
 
-.letter-badge {
-  font-size: 48px;
-  font-weight: 900;
-  color: #b89ef5;
-  margin-bottom: 12px;
-}
-
-.letter-name {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: #fff;
-}
-
-.letter-desc {
-  font-size: 14px;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.85);
-}
-
-/* Insight Sections */
-.insight-section {
-  margin-bottom: 40px;
-}
-
-.insight-section h2 {
-  font-size: 32px;
-  font-weight: 800;
-  margin: 0 0 24px;
-  text-align: center;
-}
-
-/* Career Grid */
-.career-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
-}
-
-.career-card {
-  background: rgba(139,111,217,0.12);
-  border: 1px solid rgba(139,111,217,0.25);
-  padding: 20px;
-  border-radius: 14px;
-  text-align: center;
-  font-weight: 700;
-  font-size: 15px;
-  transition: all 0.3s;
-}
-
-.career-card:hover {
-  background: rgba(139,111,217,0.2);
-  border-color: rgba(139,111,217,0.5);
-  transform: scale(1.05);
-}
-
-/* Love Card */
-.love-card {
-  background: rgba(255,111,139,0.1);
-  border: 1px solid rgba(255,111,139,0.3);
-  border-radius: 18px;
-  padding: 32px;
-  font-size: 17px;
-  line-height: 1.8;
-  text-align: center;
-}
-
-/* Horoscope Card */
-.horoscope-card {
-  background: rgba(217,175,111,0.1);
-  border: 1px solid rgba(217,175,111,0.3);
-  border-radius: 18px;
-  padding: 32px;
-}
-
-.horo-header {
+.letter-header {
   display: flex;
   align-items: center;
   gap: 16px;
-  justify-content: center;
   margin-bottom: 20px;
 }
 
-.zodiac-icon {
-  font-size: 32px;
-}
-
-.zodiac-sign {
-  font-size: 28px;
-  font-weight: 800;
-  color: #d9af6f;
-}
-
-.birth-date {
-  font-size: 15px;
-  opacity: 0.8;
-}
-
-.horo-desc {
-  font-size: 16px;
-  line-height: 1.7;
-  text-align: center;
-  margin: 0;
-}
-
-/* Palm Card */
-.palm-card {
-  background: rgba(111,217,139,0.1);
-  border: 1px solid rgba(111,217,139,0.3);
-  border-radius: 18px;
-  padding: 32px;
-  text-align: center;
-}
-
-.palm-line {
-  font-size: 20px;
-  font-weight: 700;
-  color: #6fd98b;
-  margin: 0 0 16px;
-}
-
-.palm-prediction {
-  font-size: 16px;
-  line-height: 1.7;
-  margin: 0;
-}
-
-/* Integrated Analysis */
-.insight-section.integrated {
-  margin-top: 60px;
-}
-
-.integrated-card {
-  background: linear-gradient(135deg, rgba(139,111,217,0.15), rgba(217,111,217,0.15));
-  border: 2px solid rgba(139,111,217,0.4);
-  border-radius: 20px;
-  padding: 40px;
-  font-size: 17px;
-  line-height: 1.9;
-}
-
-.integrated-card p {
-  margin: 0 0 20px;
-}
-
-.integrated-card p:last-child {
-  margin-bottom: 0;
-}
-
-.integrated-card strong {
+.letter-big {
+  font-size: 56px;
+  font-weight: 900;
   color: #b89ef5;
+  line-height: 1;
+}
+
+.letter-full-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.letter-explanation {
+  font-size: 15px;
+  line-height: 1.8;
+  margin: 0;
+  color: rgba(255,255,255,0.9);
+}
+
+/* Careers Section */
+.careers-section {
+  margin-bottom: 64px;
+}
+
+.career-grid-new {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.career-item {
+  background: rgba(139,111,217,0.15);
+  border: 1px solid rgba(139,111,217,0.3);
+  padding: 20px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s;
+  cursor: default;
+}
+
+.career-item:hover {
+  background: rgba(139,111,217,0.25);
+  border-color: rgba(139,111,217,0.5);
+  transform: translateX(8px);
+}
+
+.career-icon {
+  font-size: 24px;
+}
+
+.career-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* Relationships Section */
+.relationships-section {
+  margin-bottom: 64px;
+}
+
+.love-content {
+  background: rgba(255,111,139,0.15);
+  border: 2px solid rgba(255,111,139,0.3);
+  border-radius: 24px;
+  padding: 48px;
+  text-align: center;
+}
+
+.love-icon-large {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.love-text {
+  font-size: 18px;
+  line-height: 1.9;
+  margin: 0;
+  color: rgba(255,255,255,0.95);
+}
+
+/* Palm Section */
+.palm-section {
+  margin-bottom: 64px;
+}
+
+.palm-content {
+  background: rgba(111,217,139,0.15);
+  border: 2px solid rgba(111,217,139,0.3);
+  border-radius: 24px;
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.palm-icon-large {
+  font-size: 80px;
+  flex-shrink: 0;
+}
+
+.palm-details-new {
+  flex: 1;
+}
+
+.palm-line-name {
+  font-size: 24px;
   font-weight: 800;
+  margin: 0 0 16px;
+  color: #6fd98b;
+}
+
+.palm-meaning {
+  font-size: 17px;
+  line-height: 1.8;
+  margin: 0;
+  color: rgba(255,255,255,0.95);
 }
 
 /* Actions Footer */
 .actions-footer {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   justify-content: center;
-  margin-top: 60px;
-  padding-bottom: 40px;
+  margin-top: 48px;
+  padding-bottom: 48px;
+  flex-wrap: wrap;
 }
 
 .btn-retake, .btn-history {
   background: transparent;
   color: #fff;
   border: 2px solid rgba(255,255,255,0.3);
-  padding: 14px 28px;
+  padding: 16px 40px;
   border-radius: 14px;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 17px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s;
+  font-family: 'Quicksand', sans-serif;
 }
 
 .btn-retake:hover, .btn-history:hover {
   background: rgba(255,255,255,0.1);
   border-color: rgba(255,255,255,0.5);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(139,111,217,0.3);
 }
 
 .btn-retake {
@@ -622,32 +701,56 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 968px) {
+  .hero-type-display {
+    font-size: 80px;
+    letter-spacing: 12px;
+  }
+  
+  .analysis-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .palm-content {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
   .results-title {
     font-size: 32px;
   }
   
-  .type-display {
+  .hero-type-display {
     font-size: 64px;
     letter-spacing: 8px;
   }
   
-  .type-breakdown {
-    grid-template-columns: 1fr 1fr;
+  .hero-analysis {
+    padding: 40px 24px;
   }
   
-  .career-grid {
-    grid-template-columns: 1fr 1fr;
+  .section-title {
+    font-size: 28px;
+  }
+  
+  .back-link {
+    position: static;
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+  
+  .letters-breakdown,
+  .career-grid-new {
+    grid-template-columns: 1fr;
   }
   
   .actions-footer {
     flex-direction: column;
   }
   
-  .back-link {
-    position: static;
-    display: block;
-    width: fit-content;
-    margin-bottom: 20px;
+  .btn-retake, .btn-history {
+    width: 100%;
   }
 }

@@ -115,7 +115,7 @@ export default function PalmReading() {
 
         <main className="palm-card" onDrop={onDrop} onDragOver={(e)=>e.preventDefault()}>
           <h1>Palm Reading</h1>
-          <p className="muted">Upload a clear photo of your dominant hand's palm.</p>
+          <p className="muted">Upload a clear photo of your <b>dominant</b> hand's palm.</p>
 
           <label className="dropzone">
             <input type="file" accept="image/*" onChange={onPick} hidden />

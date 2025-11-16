@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css?v=2'; // Added ?v=2 to force reload
+import './Login.css'; // Added ?v=2 to force reload
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5001';
 
@@ -95,7 +95,7 @@ export default function Login() {
         <div className="auth-right">
           <img
             className="auth-illustration"
-            src="https://via.placeholder.com/420x300?text=Illustration"
+            src="src\4995233-removebg-preview.png"
             alt="illustration placeholder"
           />
         </div>
